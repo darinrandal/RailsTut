@@ -10,9 +10,9 @@ class UsersController < ApplicationController
   def create
   	@user = User.new(params[:user])
   	if @user.save
-  		@user = User.new(params[:user])
+  		sign_in @user
   		flash[:success] = "You have successfully registered!"
-  		redirect_to root_path
+  		redirect_to @user
   	else
   		render 'new'
   	end
