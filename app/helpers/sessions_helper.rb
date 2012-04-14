@@ -34,6 +34,11 @@ module SessionsHelper
 		session[:return_to] = request.fullpath
 	end
 
+	def redirect_with_error(error)
+		flash[:error] = error
+		redirect_to root_path
+	end
+
 	private
 		def user_from_remember_token
 			remember_token = cookies[:remember_token]
