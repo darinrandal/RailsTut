@@ -39,6 +39,14 @@ module SessionsHelper
 		redirect_to root_path
 	end
 
+  	def signed_in_user
+  		unless signed_in?
+  			store_location
+  			flash[:error] = "You must first sign in to access that page"
+  			redirect_to signin_path
+  		end
+  	end
+
 	private
 		def user_from_remember_token
 			remember_token = cookies[:remember_token]

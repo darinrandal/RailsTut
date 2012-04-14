@@ -1,14 +1,16 @@
 class UsersController < ApplicationController
+  before_filter :not_signed_in_user, only: [:new, :create]
   before_filter :signed_in_user, only: [:index, :edit, :update]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
 
   def index
-  	@users = User.paginate(page: params[:page])
+  	@users = User.paginate(page: params[:page], per_page: 2)
   end
 
   def show
   	@user = User.find(params[:id])
+  	@microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def new
@@ -50,13 +52,9 @@ class UsersController < ApplicationController
   end
 
   private
-  	def signed_in_user
-  		unless signed_in?
-  			store_location
-  			flash[:error] = "You must first sign in to access that page"
-  			redirect_to signin_path
-  		end
-  	end
+    def not_signed_in_user
+    	redirect_with_error "You are not permitted to access that page" unless !signed_in?
+    end
 
   	def correct_user
   		@user = User.find(params[:id])
